@@ -1,141 +1,79 @@
-# Iron Bank — Automated Credit Risk Assessment System
+<div align="center">
+  <h1>🏦 IRON BANK</h1>
+  <p><b>Automated Credit Risk Assessment & Portfolio Analytics Engine</b></p>
 
-> *"The Iron Bank will have its due."*
+  ![Python](https://img.shields.io/badge/Python-3.10+-blue?style=for-the-badge&logo=python&logoColor=white)
+  ![Pandas](https://img.shields.io/badge/Pandas-Data_Processing-150458?style=for-the-badge&logo=pandas&logoColor=white)
+  ![SQLite](https://img.shields.io/badge/SQLite-Database-003B57?style=for-the-badge&logo=sqlite&logoColor=white)
+  ![Matplotlib](https://img.shields.io/badge/Matplotlib-Visuals-11557c?style=for-the-badge&logo=python&logoColor=white)
+</div>
 
-A five-layer, OOP-driven credit risk engine that evaluates loan applications using
-industry-standard financial ratios and produces a formal credit assessment memo.
-Built from scratch as Phase 1 of a four-year capstone series.
+<br>
 
----
+A production-ready credit risk evaluation pipeline that ingests borrower data, calculates core financial metrics, classifies risk, stores results in SQLite, and generates portfolio visualizations.
 
-## What It Does
+## Project Overview
 
-Given a borrower's financial profile, the system:
-1. Calculates **DSCR** (Debt Service Coverage Ratio) and **DTI** (Debt-to-Income Ratio)
-2. Classifies the borrower into a risk tier — Low, Medium, High, or Undetermined
-3. Issues a formal credit decision — Approved, Approved with Conditions, Denied, or Further Review
-4. Saves the borrower record to a CSV file for future bulk analysis
-5. Prints a complete credit assessment memo to the console
+Iron Bank simulates an automated decision engine for credit assessment and portfolio analytics. It computes key lending metrics such as DTI, DSCR, EMI, and credit-based risk tiers, then persists evaluations to a database and produces a visual dashboard.
 
----
+## Features
 
-## Architecture
+- Borrower data validation and structured input handling.
+- Financial metric calculation for DTI, DSCR, and EMI.
+- Risk classification using multiple financial signals.
+- SQLite persistence for evaluated borrower records.
+- CSV export for audit and review.
+- Portfolio visualization with Matplotlib charts.
 
-This system follows a strict separation of concerns across five independent layers.
-Each class has exactly one job. No layer bleeds into another.
 
-| Layer | Class | Responsibility |
-|-------|-------|----------------|
-| 1 | `Borrower` | Stores all applicant data collected during loan application |
-| 2 | `RiskEngine` | Calculates DSCR, DTI and classifies borrower risk tier |
-| 3 | `CreditPersistence` | Saves borrower records and risk verdicts to CSV storage |
-| 4 | `CreditDecision` | Translates risk verdict into a formal loan decision |
-| 5 | `GenerateCreditMemo` | Assembles all outputs into a readable credit assessment memo |
+## System Architecture 
+The engine is built using a strict 6-layer pipeline to ensure clean code and easy maintenance:
 
----
-
-## Key Financial Metrics
-
-**DSCR — Debt Service Coverage Ratio**
-```
-DSCR = Monthly Cash Flow / Monthly Loan Payment
-```
-Measures whether the borrower generates enough cash flow to cover their loan repayment.
-A DSCR below 1.0 means the borrower cannot cover the payment from cash flow alone.
-
-**DTI — Debt-to-Income Ratio**
-```
-DTI = Total Loan Amount / Monthly Income
-```
-Measures what percentage of income is committed to debt obligations.
+* Borrower (Data Layer): Stores applicant data and handles basic validation.
+* RiskEngine (Math Layer): Computes amortized monthly payments, DTI, and DSCR.
+* CreditPersistence (Storage Layer): Saves bulk evaluations to SQLite and CSV files.
+* CreditDecision (Business Logic): Translates the risk score into a final loan decision.
+* GenerateCreditMemo (Reporting): Formats terminal summaries for individual reviews.
+* Visualisation (Analytics): Generates a Matplotlib dashboard for portfolio risk.
 
 ---
 
-## Risk Classification
+## Financial Modeling Logic
+The decision engine uses a majority voting system across three key financial metrics:
 
-| DTI | DSCR | Credit Score | Risk Tier | Decision |
-|-----|------|-------------|-----------|----------|
-| < 0.36 | ≥ 1.25 | ≥ 700 | Low Risk | APPROVED |
-| < 0.43 | < 1.25 | ≥ 650 | Medium Risk | APPROVED WITH CONDITIONS |
-| ≥ 0.43 | < 1.0 | < 650 | High Risk | DENIED |
-| Invalid data | — | — | Undetermined | FURTHER REVIEW REQUIRED |
+**Debt-to-Income (DTI)**
+* Low Risk: Under 36%
+* Medium Risk: 36% to 45%
+* High Risk: Over 45%
 
----
+**Debt Service Coverage Ratio (DSCR)**
+* Low Risk: Over 1.25
+* Medium Risk: 1.15 to 1.25
+* High Risk: Under 1.15
 
-## Sample Output
+**Credit Score**
+* Low Risk: 700 or higher
+* Medium Risk: 620 to 699
+* High Risk: Under 620
 
-```
-=============================================
-        IRON BANK — CREDIT ASSESSMENT MEMO
-=============================================
-Borrower Name  : SOMANJAN SAHA
-Date Of Birth  : 18-09-2006
-Monthly Income : $5,000.00
-Cash Flow      : $2,000.00
-Credit Score   : 720
-Loan Amount    : $150,000.00
-Loan Term      : 30 years
----------------------------------------------
-DSCR           : 0.16
-DTI            : 30.00
----------------------------------------------
-Risk Verdict   : High Risk
-Decision       : DENIED
-=============================================
-
-[LOG] Borrower record saved to borrowers.csv
-```
+**Verdict Engine:** If two or more metrics return High Risk, the final verdict is High Risk. If the metrics heavily conflict, the system flags the application as Undetermined Risk for manual review.
 
 ---
 
-## Exception Handling
+## Portfolio Analytics
+The system automatically plots the dataset to provide a macro-level view of portfolio health.
 
-| Scenario | Handling |
-|----------|----------|
-| `monthly_income = 0` | ZeroDivisionError → returns `math.nan` → FURTHER REVIEW |
-| `loan_term = 0` | ZeroDivisionError → returns `math.nan` → FURTHER REVIEW |
-| CSV file locked in Excel | PermissionError caught with descriptive message |
-| Disk full or read-only | OSError caught with descriptive message |
-| NaN in memo output | Prints `UNDEFINED` instead of crashing |
+![Iron Bank Portfolio Dashboard](https://github.com/user-attachments/assets/f67378f8-0970-400d-a322-e20450a7d977)
 
----
+**Dashboard Breakdown:**
+* Risk Verdict Distribution (Bar Chart): Shows the total count of safe vs. high-risk applicants.
+* Credit Score Distribution (Histogram): Shows the applicant pool's credit scores against the 620 and 700 thresholds.
+* DTI vs. DSCR by Risk Tier (Scatter Plot): Maps individual borrowers to easily isolate high-risk outliers.
 
-## How to Run
+## Project Structure
 
-```bash
-python credit_risk_system.py
-```
-
-No external dependencies required for Phase 1. Standard library only.
-
----
-
-## Roadmap
-
-- [x] Five-layer OOP architecture
-- [x] DSCR and DTI calculation engine
-- [x] Three-tier risk classification
-- [x] CSV persistence layer
-- [x] Exception handling across all critical layers
-- [ ] Pandas integration for bulk borrower analysis
-- [ ] NumPy synthetic data generation (1M+ borrowers)
-- [ ] IFRS 9 Expected Credit Loss engine (PD × LGD × EAD)
-- [ ] Streamlit interactive dashboard
-- [ ] ML-based Probability of Default scoring model
-- [ ] Agentic AI narrative generation for credit memos
-
----
-
-## Tech Stack
-
-| Phase | Tools |
-|-------|-------|
-| Phase 1 (Current) | Python 3.x, standard library |
-| Phase 2 | Pandas, NumPy |
-| Phase 3 | Scikit-learn, Streamlit |
-| Phase 4 | LangChain, Agentic AI |
-
----
-
-*B.Sc. Econometrics Honours — Calcutta University (2025–2029)*
-*Capstone 1 of 3 — targeting Credit Risk Analyst, HSBC Kolkata / Risk Advisory, Big 4*
+* **`iron_bank.py`** — Main application script containing the 6-Layer Architecture.
+* **`loanset.csv`** — The raw borrower input dataset.
+* **`credit_risk_assessment.db`** — SQLite database where bulk evaluations are stored (Auto-generated).
+* **`CREDIT_RISK_ASSESSMENT_*.csv`** — Time-stamped output logs of the evaluations (Auto-generated).
+* **`README.md`** — Project documentation.
