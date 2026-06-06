@@ -90,7 +90,19 @@ The layered architecture allows for scalable future integrations:
 * **Macroeconomic Stress Testing:** Integrating external variables (e.g., inflation rates, central bank interest rates) into the Math Layer to dynamically adjust lending thresholds.
 * **Live API Integration:** Transitioning from static `.csv` ingestion to pulling live borrower credit data via financial APIs.
 
----
+--- 
+
+
+
+## Installation
+
+```bash
+git clone https://github.com/somanjansahaweb/IRON-BANK-CREDIT-RISK-ASSESSMENT.git
+cd IRON-BANK-CREDIT-RISK-ASSESSMENT
+pip install pandas matplotlib
+python Banking\ Program.py
+```
+
 
 ## 📁 Project Structure
 ```text
@@ -101,3 +113,7 @@ iron-bank-risk-engine/
 ├── credit_risk_assessment.db      # SQLite database for bulk evaluations
 ├── CREDIT_RISK_ASSESSMENT_*.csv   # Time-stamped output logs
 └── README.md                      # Project documentation
+
+
+
+
